@@ -1,6 +1,35 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+
+
+timeval time;
+timeval timeInitProgram;
+timeval timeInitQuantum;
+int isProcessExecuting = false;
+
+int rascunhuMain(){
+  // Pega a data atual para saber o tempo de execução do programa todo
+  gettimeofday(&time, nullptr);
+  timeInitProgram = time
+
+  while(1){
+    gettimeofday(&tempo, nullptr);
+    //VerificaDelay();
+    
+    if(!isProcessExecuting){
+        ExecuteProcess();
+    }
+    else{
+        VerifyQuantum();
+    }
+  }
+
+
+  return 0;
+}
+
+
 int main()
 {
 
