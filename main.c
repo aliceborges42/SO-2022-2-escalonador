@@ -1,26 +1,61 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-
-
 timeval time;
 timeval timeInitProgram;
 timeval timeInitQuantum;
-int isProcessExecuting = false;
 
-int rascunhuMain(){
+typedef struct {
+  // long int delay
+  char nomeExecutavel[50];
+  int pid;
+  int priority;
+  int state; //ready, block, running, end
+  int processTime;
+  int currentTime;
+  int initialTime;
+  int finalTime;
+} process;
+
+typedef struct  {
+  int priority;
+  process *process;
+} processQueue;
+
+int isProcessExecuting = 0;
+
+int rascunhuMain(int argc, char *argv[]){
   // Pega a data atual para saber o tempo de execução do programa todo
+
+  for(int i = 0; argc; i++) {
+    push(filaDeProcessos, argv[i])
+  }
+
   gettimeofday(&time, nullptr);
   timeInitProgram = time
 
-  while(1){
+  // filaDeProcessos
+
+  // filaReady
+  // fileExecutando
+  // filaBloqueado
+
+  while(1) {
     gettimeofday(&tempo, nullptr);
     //VerificaDelay();
     
-    if(!isProcessExecuting){
-        ExecuteProcess();
-    }
-    else{
+    //execproc
+    if(!isProcessExecuting) {
+        for(int i = 0; i < filaDeProcessos.size(); i++) {
+          if(filaDeProcessos[i]->process->state == "ready") {
+            push(filaReady, filaDeProcessos[i]);
+            filaDeProcessos[i]->process->state == "running"
+            imprimeDados(filaDeProcessos[i]->process->pid);
+            execprocd();
+          }
+        }
+        ExecuteProcess(/*filaDeProcessos*/);
+    } else {
         VerifyQuantum();
     }
   }
@@ -29,13 +64,35 @@ int rascunhuMain(){
   return 0;
 }
 
+int execprocd (process Process) {
+  // irá iterar em um tempo fixo o time
+  restoreContext();
+
+  // loop com clock sendo iterado 1x por segundo
+  // se o valor do clock atinge o quantum -> condição
+  // de parada do loop, ele chama saveContext, atualiza os
+  // atributos do processo e muda a posição na fila
+  // de processos
+  if(process.currentTime != process.processTime){
+    // irá iterar em um tempo fixo o time
+    saveContext();
+  }
+
+  // Processo finalizado, atributos de processo atualizados
+  if(process.currentTime == process.processTime){
+    process.state = "end";
+    process.finalTime = time;
+    isProcessExecuting = false;
+  }
+  
+}
 
 int main()
 {
 
   struct timeval tv;
   // tv_sec
-  // tv_usec
+  // tv_usec 
 
   struct timezone tz;
   // tz_minuteswest
