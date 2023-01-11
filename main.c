@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <sys/time.h>
+#include <signal.h>
 
 timeval time;
 timeval timeInitProgram;
 timeval timeInitQuantum;
+#define QUANTUM_VALUE 100;
 
 typedef struct {
   // long int delay
@@ -11,7 +13,7 @@ typedef struct {
   int pid;
   int priority;
   int state; //ready, block, running, end
-  int processTime;
+  int processTime; 
   int currentTime;
   int initialTime;
   int finalTime;
@@ -67,7 +69,13 @@ int rascunhuMain(int argc, char *argv[]){
 int execprocd (process Process) {
   // irá iterar em um tempo fixo o time
   restoreContext();
-
+  int handleQuantum(){
+    // Função que será chamada quando atingir o quantum
+  }
+  signterrupt(1);
+  signal(SIGALRM,handleQuantum);
+  alarm(QUANTUM_VALUE)
+  
   // loop com clock sendo iterado 1x por segundo
   // se o valor do clock atinge o quantum -> condição
   // de parada do loop, ele chama saveContext, atualiza os
