@@ -17,62 +17,84 @@
 #define MEDIUM_PRIORITY_KEY 0x8552
 #define LOW_PRIORITY_KEY	0x8553
 
-int createQueue(key_t key);
+int high_priority_queue_id;
+int medium_priority_queue_id;
+int low_priority_queue_id;
+
+int get_queue(key_t key);
+int get_queue_id(char * priority);
 
 struct msgbuf {
 	long mtype;
 	char mtext[10];
 };
 
-int main() {
+int main(int argc, char **argv) {
 	int i, pid;
 
-	// Creating priority queues
-	int high_priority_queue_id = createQueue(HIGH_PRIORITY_KEY);
-	int medium_priority_queue_id = createQueue(MEDIUM_PRIORITY_KEY);
-	int low_priority_queue_id = createQueue(LOW_PRIORITY_KEY);
+	if (argc < 3) {
+		printf("Error: Wrong number of arguments\n");
+		exit(5);
+	}
+
+	// Getting priority queues
+	high_priority_queue_id = get_queue(HIGH_PRIORITY_KEY);
+	medium_priority_queue_id = get_queue(MEDIUM_PRIORITY_KEY);
+	low_priority_queue_id = get_queue(LOW_PRIORITY_KEY);
 
 	struct msgbuf msg_send;
 
-	// Creating child processes
-	for (int i = 0; i < 6; i++) {
-		pid = fork();
+	// Creating child process
+	pid = fork();
 
-		if (pid < 0) {
-			printf("Error in fork\n");
-			exit(1);
+	if (pid < 0) {
+		printf("Error in fork\n");
+		exit(1);
+	}
+
+	if (pid == 0) {
+		// Child process
+		if (execl(argv[1], argv[1], argv[2], (char *) 0) < 0) {
+			printf("Error in execl = %d\n", errno);
+			exit(3);
 		}
+	}
+	// Stop child process
+	kill(pid, SIGSTOP);
 
-		if (pid == 0) {
-			// Child process
+	// Sending child process to queue
+	msg_send.mtype = pid;
+	strcpy(msg_send.mtext, argv[2]);
 
-			if (execl("child_process", "child_process", HIGH_PRIORITY, (char *) 0) < 0) {
-				printf("Error in execl = %d\n", errno);
-				exit(3);
-			}
-		}
-
-		// Sending child process to queue
-		msg_send.mtype = pid;
-		strcpy(msg_send.mtext, HIGH_PRIORITY);
-
-		if ((msgsnd(high_priority_queue_id, &msg_send, sizeof(msg_send), IPC_NOWAIT)) < 0) {
-			printf("Error sending message\n");
-			exit(4);
-		}
-
-		// Stop child process
-		kill(pid, SIGSTOP);
+	if ((msgsnd(get_queue_id(argv[2]), &msg_send, sizeof(msg_send), IPC_NOWAIT)) < 0) {
+		printf("Error sending message\n");
+		exit(4);
 	}
 }
 
-int createQueue(key_t key) {
+int get_queue(key_t key) {
 	int id;
 
-	if ((id = msgget(key, IPC_CREAT | 0x1FF)) < 0) {
-		printf("Error creating queue\n");
+	if ((id = msgget(key, 0x1FF)) < 0) {
+		printf("Error getting queue\n");
 		exit(2);
 	}
 
 	return id;
+}
+
+int get_queue_id(char * priority) {
+	if (strcmp(HIGH_PRIORITY, priority) == 0) {
+		return high_priority_queue_id;
+	}
+
+	if (strcmp(MEDIUM_PRIORITY, priority) == 0) {
+		return medium_priority_queue_id;
+	}
+
+	if (strcmp(LOW_PRIORITY, priority) == 0) {
+		return low_priority_queue_id;
+	}
+
+	return -1;
 }
