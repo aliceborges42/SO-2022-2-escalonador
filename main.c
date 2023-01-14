@@ -5,7 +5,7 @@
 timeval time;
 timeval timeInitProgram;
 timeval timeInitQuantum;
-#define QUANTUM_VALUE 100;
+#define QUANTUM_VALUE 10;
 
 typedef struct {
   // long int delay
@@ -71,10 +71,11 @@ int execprocd (process Process) {
   restoreContext();
   int handleQuantum(){
     // Função que será chamada quando atingir o quantum
+    // Atualiza o processo atual e muda a posição na fila
   }
-  signterrupt(1);
-  signal(SIGALRM,handleQuantum);
-  alarm(QUANTUM_VALUE)
+  signterrupt(1); //Habilita interrupção
+  signal(SIGALRM, handleQuantum);
+  alarm(QUANTUM_VALUE);
   
   // loop com clock sendo iterado 1x por segundo
   // se o valor do clock atinge o quantum -> condição

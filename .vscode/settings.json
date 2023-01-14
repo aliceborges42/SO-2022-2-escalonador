@@ -2,6 +2,8 @@
   "files.associations": {
     "complex": "c",
     "locale": "c",
-    "string": "c"
+    "string": "c",
+    "__config": "c",
+    "__nullptr": "c"
   }
 }
