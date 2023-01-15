@@ -1,3 +1,11 @@
+/*
+Grupo:
+José Vinícius Garreto Costa - 180123734
+Bruno Couto Marino -
+Alice da Costa Borges -
+Caio Mendes -
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

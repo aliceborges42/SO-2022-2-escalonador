@@ -1,3 +1,11 @@
+/*
+Grupo:
+José Vinícius Garreto Costa - 180123734
+Bruno Couto Marino -
+Alice da Costa Borges -
+Caio Mendes -
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -18,10 +26,12 @@
 #define HIGH_PRIORITY_KEY	0x8551
 #define MEDIUM_PRIORITY_KEY 0x8552
 #define LOW_PRIORITY_KEY	0x8553
+#define END_TIME_KEY	0x8554
 
 int high_priority_queue_id;
 int medium_priority_queue_id;
 int low_priority_queue_id;
+int end_time_queue_id;
 
 int is_process_running = 0; // 0 is false, 1 is true
 long running_process_pid;
@@ -35,18 +45,17 @@ int is_first_process = 1;
 
 struct msgbuf {
 	long mtype;
-	char mtext[10];
-} msg_send;
+	char mtext[100];
+} msg_send, msg_rec;
 
 time_t start, end;
 
 int main() {
-	struct msgbuf msg_rec;
-
 	// Creating priority queues
 	high_priority_queue_id = create_queue(HIGH_PRIORITY_KEY);
 	medium_priority_queue_id = create_queue(MEDIUM_PRIORITY_KEY);
 	low_priority_queue_id = create_queue(LOW_PRIORITY_KEY);
+	end_time_queue_id = create_queue(END_TIME_KEY);
 
 	// Treat alarm signal
 	signal(SIGALRM, quantum);
@@ -131,10 +140,11 @@ void quantum() {
 	printf("Quantum: Processo Filho | PID = %ld\n", running_process_pid);
 
 	if ((kill(running_process_pid, SIGSTOP)) < 0) {
-		printf("Processo PID = %ld encerrou\n", running_process_pid);
-		time(&end);
-		double turnaround_time = difftime(end, start);
- 		printf("Turnaround Time: %f seconds\n", turnaround_time);
+		if ((msgrcv(end_time_queue_id, &msg_rec, sizeof(msg_rec), 0, IPC_NOWAIT)) >= 0) {
+			int time = atoi(msg_rec.mtext);
+			double turnaround_time = difftime(time, start);
+			printf("Turnaround Time: %f seconds\n", turnaround_time);
+		}
 		is_process_running = 0;
 		return;
 	}
@@ -143,14 +153,14 @@ void quantum() {
 
 	// Change priority
 	if (strcmp(HIGH_PRIORITY, running_process_priority) == 0) {
-		// If HIGH, change to LOW
-		strcpy(msg_send.mtext, LOW_PRIORITY);
-	} else if (strcmp(MEDIUM_PRIORITY, running_process_priority) == 0) {
-		// If MEDIUM, change to HIGH
-		strcpy(msg_send.mtext, HIGH_PRIORITY);
-	} else {
-		// IF LOW, change to MEDIUM
+		// If HIGH, change to MEDIUM
 		strcpy(msg_send.mtext, MEDIUM_PRIORITY);
+	} else if (strcmp(MEDIUM_PRIORITY, running_process_priority) == 0) {
+		// If MEDIUM, change to LOW
+		strcpy(msg_send.mtext, LOW_PRIORITY);
+	} else {
+		// IF LOW, change to HIGH
+		strcpy(msg_send.mtext, HIGH_PRIORITY);
 	}
 
 	// Sending process to the end of the queue
