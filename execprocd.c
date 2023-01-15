@@ -26,12 +26,14 @@ Caio Mendes -
 #define HIGH_PRIORITY_KEY	0x8551
 #define MEDIUM_PRIORITY_KEY 0x8552
 #define LOW_PRIORITY_KEY	0x8553
-#define END_TIME_KEY	0x8554
+#define END_TIME_KEY		0x8554
+#define PROCESS_PID_KEY		0x8555
 
 int high_priority_queue_id;
 int medium_priority_queue_id;
 int low_priority_queue_id;
 int end_time_queue_id;
+int process_pid_queue_id;
 
 int is_process_running = 0; // 0 is false, 1 is true
 long running_process_pid;
@@ -56,9 +58,16 @@ int main() {
 	medium_priority_queue_id = create_queue(MEDIUM_PRIORITY_KEY);
 	low_priority_queue_id = create_queue(LOW_PRIORITY_KEY);
 	end_time_queue_id = create_queue(END_TIME_KEY);
+	process_pid_queue_id = create_queue(PROCESS_PID_KEY);
 
 	// Treat alarm signal
 	signal(SIGALRM, quantum);
+	msg_send.mtype = getpid();
+
+	if (msgsnd(process_pid_queue_id, &msg_send, sizeof(msg_send), IPC_NOWAIT) < 0) {
+		printf("Error sending execprocd pid message\n");
+		exit(4);
+	}
 
 	while (1) {
 		while(is_process_running);

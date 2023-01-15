@@ -24,13 +24,16 @@ Caio Mendes -
 #define HIGH_PRIORITY_KEY	0x8551
 #define MEDIUM_PRIORITY_KEY 0x8552
 #define LOW_PRIORITY_KEY	0x8553
+#define PROCESS_PID_KEY		0x8555
 
 int high_priority_queue_id;
 int medium_priority_queue_id;
 int low_priority_queue_id;
+int process_pid_queue_id;
 
 int get_queue(key_t key);
 int get_queue_id(char * priority);
+int create_queue(key_t key);
 
 struct msgbuf {
 	long mtype;
@@ -49,6 +52,7 @@ int main(int argc, char **argv) {
 	high_priority_queue_id = get_queue(HIGH_PRIORITY_KEY);
 	medium_priority_queue_id = get_queue(MEDIUM_PRIORITY_KEY);
 	low_priority_queue_id = get_queue(LOW_PRIORITY_KEY);
+	process_pid_queue_id = get_queue(PROCESS_PID_KEY);
 
 	struct msgbuf msg_send;
 
@@ -78,6 +82,23 @@ int main(int argc, char **argv) {
 		printf("Error sending message\n");
 		exit(4);
 	}
+
+	if (msgsnd(process_pid_queue_id, &msg_send, sizeof(msg_send), IPC_NOWAIT) < 0) {
+		printf("Error sending message\n");
+		exit(4);
+	}
+	printf("PID PROCESS: %s\n", msg_send.mtext);
+}
+
+int create_queue(key_t key) {
+	int id;
+
+	if ((id = msgget(key, IPC_CREAT | 0x1FF)) < 0) {
+		printf("Error creating queue\n");
+		exit(2);
+	}
+
+	return id;
 }
 
 int get_queue(key_t key) {
