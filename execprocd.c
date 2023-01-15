@@ -31,10 +31,14 @@ void quantum();
 int create_queue(key_t key);
 int get_queue_id(char * priority);
 
+int is_first_process = 1;
+
 struct msgbuf {
 	long mtype;
 	char mtext[10];
 } msg_send;
+
+time_t start, end;
 
 int main() {
 	struct msgbuf msg_rec;
@@ -62,6 +66,11 @@ int main() {
 
 			printf("Iniciou: Processo Filho HIGH_PRIORITY | PID = %ld\n", pid);
 
+			if(is_first_process){
+				is_first_process = 0;
+				time(&start);
+			}
+
 			kill(pid, SIGCONT);
 
 			continue;
@@ -80,6 +89,11 @@ int main() {
 			strcpy(running_process_priority, msg_rec.mtext);
 
 			printf("Iniciou: Processo Filho MEDIUM_PRIORITY | PID = %ld\n", pid);
+
+			if(is_first_process){
+				is_first_process = 0;
+				time(&start);
+			}
 
 			kill(pid, SIGCONT);
 
@@ -100,6 +114,11 @@ int main() {
 
 			printf("Iniciou: Processo Filho LOW_PRIORITY | PID = %ld\n", pid);
 
+			if(is_first_process){
+				is_first_process = 0;
+				time(&start);
+			}
+
 			kill(pid, SIGCONT);
 
 			continue;
@@ -113,6 +132,10 @@ void quantum() {
 
 	if ((kill(running_process_pid, SIGSTOP)) < 0) {
 		printf("Processo PID = %ld encerrou\n", running_process_pid);
+		time(&end);
+		double turnaround_time = difftime(end, start);
+ 		printf("Turnaround Time: %f seconds\n", turnaround_time);
+		is_process_running = 0;
 		return;
 	}
 
