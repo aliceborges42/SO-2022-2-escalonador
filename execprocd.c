@@ -144,6 +144,7 @@ void quantum() {
 			int time = atoi(msg_rec.mtext);
 			double turnaround_time = difftime(time, start);
 			printf("Turnaround Time: %f seconds\n", turnaround_time);
+			printf("PID = %ld\n", running_process_pid);
 		}
 		is_process_running = 0;
 		return;
