@@ -1,9 +1,9 @@
 /*
 Grupo:
-José Vinícius Garreto Costa - 180123734
-Bruno Couto Marino -
-Alice da Costa Borges -
-Caio Mendes -
+- José Vinícius Garreto Costa - 180123734
+ - Alice Borges - 18/0011855
+ - Bruno Couto Mariño - 19/0011106
+ - Caio Mendes - 19/0011211
 */
 
 #include <stdio.h>

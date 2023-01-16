@@ -4,6 +4,7 @@
     "locale": "c",
     "string": "c",
     "__config": "c",
-    "__nullptr": "c"
+    "__nullptr": "c",
+    "unistd.h": "c"
   }
 }

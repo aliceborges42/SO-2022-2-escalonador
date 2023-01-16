@@ -20,6 +20,19 @@ run: execprocd execproc child_process
 	./execprocd & \
 	./execproc child_process MEDIUM &
 
+run10: execprocd execproc child_process
+	./execprocd & \
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+	./execproc child_process MEDIUM &
+
 cancela_proc: cancela
 	./cancela_proc
 
@@ -27,4 +40,4 @@ termina_proc: termina
 	./termina_execprocessod
 
 clean:
-	rm -rf *.o *~ execprocd execproc child_process
+	rm -rf *.o *~ execprocd execproc child_process cancela_proc termina_proc
