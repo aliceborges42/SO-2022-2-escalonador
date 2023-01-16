@@ -40,4 +40,4 @@ termina_proc: termina
 	./termina_execprocessod
 
 clean:
-	rm -rf *.o *~ execprocd execproc child_process cancela_proc termina_proc
+	rm -rf *.o *~ execprocd execproc child_process cancela_proc termina_execprocessod
