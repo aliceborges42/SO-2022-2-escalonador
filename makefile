@@ -16,25 +16,23 @@ cancela: cancela_proc.c
 child_process: child_process.c
 	cc child_process.c -o child_process
 
+execprocd-run: execprocd
+	./execprocd &
+
 run: execprocd execproc child_process
-	./execprocd & \
 	./execproc child_process MEDIUM &
 
 run10: execprocd execproc child_process
-	./execprocd & \
+	./execproc child_process MEDIUM &
+	./execproc child_process LOW &
 	./execproc child_process MEDIUM &
 	./execproc child_process MEDIUM &
+	./execproc child_process HIGH &
 	./execproc child_process MEDIUM &
+	./execproc child_process LOW &
+	./execproc child_process LOW &
 	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-	./execproc child_process MEDIUM &
-
-cancela_proc: cancela
-	./cancela_proc
+	./execproc child_process HIGH &
 
 termina_proc: termina
 	./termina_execprocessod
