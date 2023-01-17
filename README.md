@@ -53,5 +53,5 @@ Em seguida pode se conferir com o comando ps -l que o processo foi cancelado
 
 Para terminar os processos
 ```
-make termina
+make termina_proc
 ```
