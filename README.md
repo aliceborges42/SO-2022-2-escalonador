@@ -7,6 +7,7 @@ Trabalho de Sistemas Operacionais do Grupo:
  - José Garreto -  18/0123734
 
 ## Como rodar o projeto
+Utilize o comando abaixo para compilar os arquivos:
 
 ```
 make all
@@ -17,23 +18,27 @@ ou compilar os arquivos separadamente com:
 ```
 cc execprocd.c -o execprocd
 cc execproc.c -o execproc
-cc child_process.c -o child_process
 cc termina_execprocessod.c -o termina_execprocessod
 cc cancela_proc.c -o cancela_proc
+cc child_process.c -o child_process
+```
+
+Para cancelar os processos
+```
+make cancela
 ```
 
 Antes de executar os processos, é necessário rodar o execprocd em background, para isso utilize o comando:
-````
+```
 make execprocd-run
 ```
-Executar o programa com um processo:
 
+Executar o programa com um processo:
 ```
 make run
 ```
 
 Executar o programa com dez processos:
-
 ```
 make run10
 ```
