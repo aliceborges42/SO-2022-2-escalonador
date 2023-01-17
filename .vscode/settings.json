@@ -1,0 +1,10 @@
+{
+  "files.associations": {
+    "complex": "c",
+    "locale": "c",
+    "string": "c",
+    "__config": "c",
+    "__nullptr": "c",
+    "unistd.h": "c"
+  }
+}
